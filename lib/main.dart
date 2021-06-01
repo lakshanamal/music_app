@@ -26,6 +26,12 @@ class _MusicAppState extends State<MusicApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar:AppBar(
+        backgroundColor: Colors.blue,
+        title: Text("My Music Player"),
+        elevation: 0,
+      ),
+      
     );
   }
 }
