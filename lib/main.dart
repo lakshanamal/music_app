@@ -59,7 +59,8 @@ class _MusicAppState extends State<MusicApp> {
               itemBuilder: (context,index)=>customListTile(
              title: musicList[index]['title'],
               singer:musicList[index]['singer'],
-              cover:musicList[index]['cover']
+              cover:musicList[index]['cover'],
+              onTap:(){}
             )),
           ),
           Container()
