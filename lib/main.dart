@@ -1,6 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'components/custom_list.dart';
+// import 'components/custom_list.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // main method in flutter
 void main() {
@@ -46,12 +48,30 @@ class _MusicAppState extends State<MusicApp> {
     },
   ];
 
+  final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+  List<SongInfo> songs = [];
+
+  Future<void> getSongs() async {
+    // var status = await Permission.camera.status;
+    // if (status.isDenied) {
+    songs = await audioQuery.getSongs();
+    print(songs[0]);
+    // }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSongs();
+  }
+
   String currentSinger = "";
   String currentTitle = "";
   String currentCover = "";
   IconData btn = Icons.play_arrow;
 
   AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+  AudioCache audioCache;
   bool isPlaying = false;
   String currentSong = "";
 
@@ -74,6 +94,7 @@ class _MusicAppState extends State<MusicApp> {
       if (result == 1) {
         setState(() {
           isPlaying = true;
+          btn = Icons.play_arrow;
         });
       }
     }
@@ -92,43 +113,76 @@ class _MusicAppState extends State<MusicApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff16202a),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Color(0xff1c2939),
         title: Text("My Music Player"),
         elevation: 0,
       ),
       body: Column(
         children: [
           Expanded(
+            // child: ListView.builder(
+            //     itemCount: musicList.length,
+            //     itemBuilder: (context, index) => customListTile(
+            //         title: musicList[index]['title'],
+            //         singer: musicList[index]['singer'],
+            //         cover: musicList[index]['cover'],
+            //         onTap: () {
+            //           playMusic(musicList[index]['url']);
+            //           setState(() {
+            //             currentTitle = musicList[index]['title'];
+            //             currentCover = musicList[index]['cover'];
+            //             currentSinger = musicList[index]['singer'];
+            //           });
+            //         })),
+            // child: ListView.builder(
+            //     itemCount: songs.length,
+            //     itemBuilder: (context, index) => customListTile(
+            //         title: musicList[index]['title'],
+            //         singer: musicList[index]['singer'],
+            //         cover: musicList[index]['cover'],
+            //         onTap: () {
+            //           playMusic(musicList[index]['url']);
+            //           setState(() {
+            //             currentTitle = musicList[index]['title'];
+            //             currentCover = musicList[index]['cover'];
+            //             currentSinger = musicList[index]['singer'];
+            //           });
+            //         })),
             child: ListView.builder(
-                itemCount: musicList.length,
-                itemBuilder: (context, index) => customListTile(
-                    title: musicList[index]['title'],
-                    singer: musicList[index]['singer'],
-                    cover: musicList[index]['cover'],
-                    onTap: () {
-                      playMusic(musicList[index]['url']);
-                      setState(() {
-                        currentTitle = musicList[index]['title'];
-                        currentCover = musicList[index]['cover'];
-                        currentSinger = musicList[index]['singer'];
-                      });
-                    })),
+              itemCount: songs.length,
+              itemBuilder: (context, index) {
+                var song = songs[index];
+
+                return ListTile(
+                  title: Text(song.title),
+                  onTap: () {
+                    playMusic(song.filePath);
+                  },
+                  subtitle: Row(
+                    children: [
+                      Text(song.artist),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.black87, boxShadow: [
+            decoration: BoxDecoration(color: Color(0xff1c2939), boxShadow: [
               BoxShadow(
                 color: Color(0x55212121),
               )
             ]),
             child: Column(
               children: [
-                Slider.adaptive(value: position.inSeconds.toDouble(),
-                min:0.0,
-                max:duration.inSeconds.toDouble(),
-                 onChanged: (value) {}),
+                Slider.adaptive(
+                    value: position.inMicroseconds.toDouble(),
+                    min: 0.0,
+                    max: duration.inMicroseconds.toDouble(),
+                    onChanged: (value) {}),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -176,7 +230,15 @@ class _MusicAppState extends State<MusicApp> {
                             });
                           }
                         },
-                        iconSize: 42)
+                        iconSize: 42),
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                      ),
+                      onPressed: () => getSongs,
+                      child: Text('Scan'),
+                    )
                   ],
                 )
               ],
