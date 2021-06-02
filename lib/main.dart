@@ -65,9 +65,6 @@ class _MusicAppState extends State<MusicApp> {
     getSongs();
   }
 
-  String currentSinger = "";
-  String currentTitle = "";
-  String currentCover = "";
   IconData btn = Icons.play_arrow;
 
   AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
@@ -116,53 +113,46 @@ class _MusicAppState extends State<MusicApp> {
       backgroundColor: Color(0xff16202a),
       appBar: AppBar(
         backgroundColor: Color(0xff1c2939),
-        title: Text("My Music Player"),
+        title: Text(
+          "My Music Player",
+          style: TextStyle(color: Color(0xff005fd4)),
+        ),
         elevation: 0,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.whatshot_outlined,
+                size: 25,
+              ),
+              onPressed: () => getSongs)
+        ],
       ),
       body: Column(
         children: [
           Expanded(
-            // child: ListView.builder(
-            //     itemCount: musicList.length,
-            //     itemBuilder: (context, index) => customListTile(
-            //         title: musicList[index]['title'],
-            //         singer: musicList[index]['singer'],
-            //         cover: musicList[index]['cover'],
-            //         onTap: () {
-            //           playMusic(musicList[index]['url']);
-            //           setState(() {
-            //             currentTitle = musicList[index]['title'];
-            //             currentCover = musicList[index]['cover'];
-            //             currentSinger = musicList[index]['singer'];
-            //           });
-            //         })),
-            // child: ListView.builder(
-            //     itemCount: songs.length,
-            //     itemBuilder: (context, index) => customListTile(
-            //         title: musicList[index]['title'],
-            //         singer: musicList[index]['singer'],
-            //         cover: musicList[index]['cover'],
-            //         onTap: () {
-            //           playMusic(musicList[index]['url']);
-            //           setState(() {
-            //             currentTitle = musicList[index]['title'];
-            //             currentCover = musicList[index]['cover'];
-            //             currentSinger = musicList[index]['singer'];
-            //           });
-            //         })),
             child: ListView.builder(
               itemCount: songs.length,
               itemBuilder: (context, index) {
                 var song = songs[index];
 
                 return ListTile(
-                  title: Text(song.title),
+                  leading: Icon(
+                    Icons.music_note_outlined,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                    song.title,
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onTap: () {
                     playMusic(song.filePath);
                   },
                   subtitle: Row(
                     children: [
-                      Text(song.artist),
+                      Text(
+                        song.artist,
+                        style: TextStyle(color: Color(0xff3c8cef)),
+                      ),
                     ],
                   ),
                 );
@@ -186,59 +176,60 @@ class _MusicAppState extends State<MusicApp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      height: 80.0,
-                      width: 80.0,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          image: DecorationImage(
-                              image: NetworkImage(currentCover))),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentTitle,
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Text(currentSinger,
-                            style: TextStyle(
-                                color: Colors.white24, fontSize: 16.0))
-                      ],
-                    ),
+                    // Container(
+                    //   height: 80.0,
+                    //   width: 80.0,
+                    //   padding: EdgeInsets.all(8),
+                    //   decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(16.0),
+                    //       image: DecorationImage(
+                    //           image: NetworkImage(currentCover))),
+                    // ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text(
+                    //       currentTitle,
+                    //       style: TextStyle(
+                    //           fontSize: 18.0,
+                    //           fontWeight: FontWeight.w600,
+                    //           color: Colors.white),
+                    //     ),
+                    //     SizedBox(
+                    //       height: 5.0,
+                    //     ),
+                    //     Text(currentSinger,
+                    //         style: TextStyle(
+                    //             color: Colors.white24, fontSize: 16.0))
+                    //   ],
+                    // ),
                     IconButton(
                         icon: Icon(btn),
+                        color: Colors.white,
                         onPressed: () {
                           if (isPlaying) {
                             audioPlayer.pause();
                             setState(() {
                               isPlaying = false;
-                              btn = Icons.pause;
+                              btn = Icons.play_arrow;
                             });
                           } else {
                             audioPlayer.resume();
                             setState(() {
                               isPlaying = true;
-                              btn = Icons.play_arrow;
+                              btn = Icons.pause;
                             });
                           }
                         },
                         iconSize: 42),
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                      ),
-                      onPressed: () => getSongs,
-                      child: Text('Scan'),
-                    )
+                    // TextButton(
+                    //   style: ButtonStyle(
+                    //     foregroundColor:
+                    //         MaterialStateProperty.all<Color>(Colors.blue),
+                    //   ),
+                    //   onPressed: () => getSongs,
+                    //   child: Text('Scan'),
+                    // )
                   ],
                 )
               ],
