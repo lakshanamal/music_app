@@ -21,12 +21,14 @@ Widget customListTile({
           ),
           SizedBox(width: 10.0),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,style: TextStyle(fontSize: 18.0,fontWeight:FontWeight.w600),
               ),
               SizedBox(
                 height: 5.0,
+                
               ),Text(
                 singer,style:TextStyle(color: Colors.grey,fontSize: 16.0)
               )

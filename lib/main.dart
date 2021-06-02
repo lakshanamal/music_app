@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'components/custom_list.dart';
+
 // main method in flutter
 void main() {
   runApp(MyApp());
@@ -21,26 +22,33 @@ class MusicApp extends StatefulWidget {
 }
 
 class _MusicAppState extends State<MusicApp> {
-  List musicList = [ 
+  List musicList = [
     {
       'title': "Diurala Pawasanna",
       'singer': 'Centigraz',
       'url': 'https://luan.xyz/files/audio/ambient_c_motion.mp3',
-      'cover':'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZL_947MiMwYjbz6KRX57tuBubJp-YNk4kUg&usqp=CAU'
+      'cover': 'https://tune.lk/storage/app/public/img/artist/1584102213.jpg'
     },
     {
-      'title': "Diurala Pawasanna",
+      'title': "Miduma",
       'singer': 'Centigraz',
       'url': 'https://luan.xyz/files/audio/nasa_on_a_mission.mp3',
-       'cover':'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZL_947MiMwYjbz6KRX57tuBubJp-YNk4kUg&usqp=CAU'
+      'cover':
+          'https://a10.gaanacdn.com/images/albums/47/3058247/crop_175x175_1613702526_3058247.jpg'
     },
     {
       'title': "Diurala Pawasanna",
       'singer': 'Centigraz',
       'url': 'https://luan.xyz/files/audio/ambient_c_motion.mp3',
-       'cover':'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZL_947MiMwYjbz6KRX57tuBubJp-YNk4kUg&usqp=CAU'
+      'cover':
+          'https://artmusic.lk/wp-content/uploads/2020/10/artmusic.lk-Obata-Lanvee-Apoorwa-Theme-Song-FM-Derana-Raween-Kanishka-Nuwandika-Senarathne.jpeg'
     },
   ];
+
+  String currentSinger = "";
+  String currentTitle = "";
+  String currentCover = "";
+  IconData btn = Icons.play_arrow;
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +63,65 @@ class _MusicAppState extends State<MusicApp> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount:musicList.length,
-              itemBuilder: (context,index)=>customListTile(
-             title: musicList[index]['title'],
-              singer:musicList[index]['singer'],
-              cover:musicList[index]['cover'],
-              onTap:(){}
-            )),
+                itemCount: musicList.length,
+                itemBuilder: (context, index) => customListTile(
+                    title: musicList[index]['title'],
+                    singer: musicList[index]['singer'],
+                    cover: musicList[index]['cover'],
+                    onTap: () {
+                      setState(() {
+                        currentTitle = musicList[index]['title'];
+                        currentCover = musicList[index]['cover'];
+                        currentSinger = musicList[index]['singer'];
+                      });
+                    })),
           ),
-          Container()
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(color: Colors.black87, boxShadow: [
+              BoxShadow(
+                color: Color(0x55212121),
+              )
+            ]),
+            child: Column(
+              children: [
+                Slider.adaptive(value: 0.0, onChanged: (value) {}),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: 80.0,
+                      width: 80.0,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          image: DecorationImage(
+                              image: NetworkImage(currentCover))),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          currentTitle,
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Text(currentSinger,
+                            style: TextStyle(
+                                color: Colors.white24, fontSize: 16.0))
+                      ],
+                    ),
+                    IconButton(icon: Icon(Icons.play_arrow), onPressed: () {})
+                  ],
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
