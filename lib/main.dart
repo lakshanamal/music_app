@@ -54,6 +54,10 @@ class _MusicAppState extends State<MusicApp> {
   AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
   bool isPlaying = false;
   String currentSong = "";
+
+  Duration duration = new Duration();
+  Duration position = new Duration();
+
   void playMusic(String url) async {
     if (isPlaying && currentSong != url) {
       audioPlayer.pause();
@@ -73,6 +77,16 @@ class _MusicAppState extends State<MusicApp> {
         });
       }
     }
+    audioPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        duration = event;
+      });
+    });
+    audioPlayer.onAudioPositionChanged.listen((event) {
+      setState(() {
+        position = event;
+      });
+    });
   }
 
   @override
@@ -111,7 +125,10 @@ class _MusicAppState extends State<MusicApp> {
             ]),
             child: Column(
               children: [
-                Slider.adaptive(value: 0.0, onChanged: (value) {}),
+                Slider.adaptive(value: position.inSeconds.toDouble(),
+                min:0.0,
+                max:duration.inSeconds.toDouble(),
+                 onChanged: (value) {}),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
