@@ -142,7 +142,24 @@ class _MusicAppState extends State<MusicApp> {
                                 color: Colors.white24, fontSize: 16.0))
                       ],
                     ),
-                    IconButton(icon: Icon(btn), onPressed: () {}, iconSize: 42)
+                    IconButton(
+                        icon: Icon(btn),
+                        onPressed: () {
+                          if (isPlaying) {
+                            audioPlayer.pause();
+                            setState(() {
+                              isPlaying = false;
+                              btn = Icons.pause;
+                            });
+                          } else {
+                            audioPlayer.resume();
+                            setState(() {
+                              isPlaying = true;
+                              btn = Icons.play_arrow;
+                            });
+                          }
+                        },
+                        iconSize: 42)
                   ],
                 )
               ],
