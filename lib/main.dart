@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'components/custom_list.dart';
 
@@ -26,7 +27,7 @@ class _MusicAppState extends State<MusicApp> {
     {
       'title': "Diurala Pawasanna",
       'singer': 'Centigraz',
-      'url': 'https://luan.xyz/files/audio/ambient_c_motion.mp3',
+      'url': 'http://topbadu.net/sinhala_mp3/Centigradz_Diurala_Pawasanna.mp3',
       'cover': 'https://tune.lk/storage/app/public/img/artist/1584102213.jpg'
     },
     {
@@ -50,6 +51,30 @@ class _MusicAppState extends State<MusicApp> {
   String currentCover = "";
   IconData btn = Icons.play_arrow;
 
+  AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+  bool isPlaying = false;
+  String currentSong = "";
+  void playMusic(String url) async {
+    if (isPlaying && currentSong != url) {
+      audioPlayer.pause();
+      int result = await audioPlayer.play(url);
+
+      if (result == 1) {
+        setState(() {
+          currentSong = url;
+        });
+      }
+    } else if (!isPlaying) {
+      int result = await audioPlayer.play(url);
+
+      if (result == 1) {
+        setState(() {
+          isPlaying = true;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +94,7 @@ class _MusicAppState extends State<MusicApp> {
                     singer: musicList[index]['singer'],
                     cover: musicList[index]['cover'],
                     onTap: () {
+                      playMusic(musicList[index]['url']);
                       setState(() {
                         currentTitle = musicList[index]['title'];
                         currentCover = musicList[index]['cover'];
@@ -116,7 +142,7 @@ class _MusicAppState extends State<MusicApp> {
                                 color: Colors.white24, fontSize: 16.0))
                       ],
                     ),
-                    IconButton(icon: Icon(Icons.play_arrow), onPressed: () {})
+                    IconButton(icon: Icon(btn), onPressed: () {}, iconSize: 42)
                   ],
                 )
               ],
