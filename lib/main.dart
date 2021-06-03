@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'components/custom_list.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MusicApp(),
     );
   }
@@ -25,38 +27,12 @@ class MusicApp extends StatefulWidget {
 }
 
 class _MusicAppState extends State<MusicApp> {
-  List musicList = [
-    {
-      'title': "Diurala Pawasanna",
-      'singer': 'Centigraz',
-      'url': 'http://topbadu.net/sinhala_mp3/Centigradz_Diurala_Pawasanna.mp3',
-      'cover': 'https://tune.lk/storage/app/public/img/artist/1584102213.jpg'
-    },
-    {
-      'title': "Miduma",
-      'singer': 'Centigraz',
-      'url': 'https://luan.xyz/files/audio/nasa_on_a_mission.mp3',
-      'cover':
-          'https://a10.gaanacdn.com/images/albums/47/3058247/crop_175x175_1613702526_3058247.jpg'
-    },
-    {
-      'title': "Diurala Pawasanna",
-      'singer': 'Centigraz',
-      'url': 'https://luan.xyz/files/audio/ambient_c_motion.mp3',
-      'cover':
-          'https://artmusic.lk/wp-content/uploads/2020/10/artmusic.lk-Obata-Lanvee-Apoorwa-Theme-Song-FM-Derana-Raween-Kanishka-Nuwandika-Senarathne.jpeg'
-    },
-  ];
-
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
   List<SongInfo> songs = [];
 
   Future<void> getSongs() async {
-    // var status = await Permission.camera.status;
-    // if (status.isDenied) {
     songs = await audioQuery.getSongs();
-    print(songs[0]);
-    // }
+    return songs;
   }
 
   @override
@@ -68,7 +44,7 @@ class _MusicAppState extends State<MusicApp> {
   IconData btn = Icons.play_arrow;
 
   AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
-  AudioCache audioCache;
+  // AudioCache audioCache=getSongs();
   bool isPlaying = false;
   String currentSong = "";
 
@@ -110,133 +86,305 @@ class _MusicAppState extends State<MusicApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff16202a),
-      appBar: AppBar(
-        backgroundColor: Color(0xff1c2939),
-        title: Text(
-          "My Music Player",
-          style: TextStyle(color: Color(0xff005fd4)),
-        ),
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.whatshot_outlined,
-                size: 25,
-              ),
-              onPressed: () => getSongs)
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: songs.length,
-              itemBuilder: (context, index) {
-                var song = songs[index];
-
-                return ListTile(
-                  leading: Icon(
-                    Icons.music_note_outlined,
-                    color: Colors.white,
-                  ),
-                  title: Text(
-                    song.title,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    playMusic(song.filePath);
-                  },
-                  subtitle: Row(
-                    children: [
-                      Text(
-                        song.artist,
-                        style: TextStyle(color: Color(0xff3c8cef)),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Color(0xff1c2939), boxShadow: [
-              BoxShadow(
-                color: Color(0x55212121),
-              )
-            ]),
+      backgroundColor: Colors.black,
+      body: Container(
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.only(top: 48.0),
+          child: Container(
             child: Column(
               children: [
-                Slider.adaptive(
-                    value: position.inMicroseconds.toDouble(),
-                    min: 0.0,
-                    max: duration.inMicroseconds.toDouble(),
-                    onChanged: (value) {}),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Container(
-                    //   height: 80.0,
-                    //   width: 80.0,
-                    //   padding: EdgeInsets.all(8),
-                    //   decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(16.0),
-                    //       image: DecorationImage(
-                    //           image: NetworkImage(currentCover))),
-                    // ),
-                    // Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     Text(
-                    //       currentTitle,
-                    //       style: TextStyle(
-                    //           fontSize: 18.0,
-                    //           fontWeight: FontWeight.w600,
-                    //           color: Colors.white),
-                    //     ),
-                    //     SizedBox(
-                    //       height: 5.0,
-                    //     ),
-                    //     Text(currentSinger,
-                    //         style: TextStyle(
-                    //             color: Colors.white24, fontSize: 16.0))
-                    //   ],
-                    // ),
-                    IconButton(
-                        icon: Icon(btn),
-                        color: Colors.white,
-                        onPressed: () {
-                          if (isPlaying) {
-                            audioPlayer.pause();
-                            setState(() {
-                              isPlaying = false;
-                              btn = Icons.play_arrow;
-                            });
-                          } else {
-                            audioPlayer.resume();
-                            setState(() {
-                              isPlaying = true;
-                              btn = Icons.pause;
-                            });
-                          }
-                        },
-                        iconSize: 42),
-                    // TextButton(
-                    //   style: ButtonStyle(
-                    //     foregroundColor:
-                    //         MaterialStateProperty.all<Color>(Colors.blue),
-                    //   ),
-                    //   onPressed: () => getSongs,
-                    //   child: Text('Scan'),
-                    // )
+                    Text(
+                      "Musify",
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {}),
+                        Transform.scale(
+                            scale: 0.7,
+                            child: CupertinoSwitch(
+                                value: true,
+                                trackColor: Color(0xff4a4a4a),
+                                activeColor: Color(0xffff5e00),
+                                onChanged: (value) {
+                                  setState(() {
+                                    value = !value;
+                                  });
+                                })),
+                      ],
+                    )
                   ],
-                )
+                ),
+                Expanded(
+                    child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(0xff242424),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      )),
+                )),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(Radius.circular(40))),
+                    child: Column(children: [
+                      // Slider.adaptive(
+                      //     value: position.inMicroseconds.toDouble(),
+                      //     min: 0.0,
+                      //     max: duration.inMicroseconds.toDouble(),
+                      //     onChanged: (value) {}),
+                      Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                        children: [
+                          SizedBox(
+                            height: 200,
+                            width: 200,
+                            child: Blob(),
+                          ),
+                          MaterialButton(
+                            child: Icon(
+                              Icons.skip_previous_outlined,
+                              color: Colors.orange,
+                            ),
+                            padding: EdgeInsets.all(20),
+                            onPressed: () {
+                              if (isPlaying) {
+                                audioPlayer.pause();
+                                setState(() {
+                                  isPlaying = false;
+                                  btn = Icons.skip_previous_outlined;
+                                });
+                              } else {
+                                audioPlayer.resume();
+                                setState(() {
+                                  isPlaying = true;
+                                  btn = Icons.pause;
+                                });
+                              }
+                            },
+                          ),
+                          MaterialButton(
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: Colors.orange[800],
+                              size: 35,
+                            ),
+                            padding: EdgeInsets.all(20),
+                            onPressed: () {
+                              if (isPlaying) {
+                                audioPlayer.pause();
+                                setState(() {
+                                  isPlaying = false;
+                                  btn = Icons.play_arrow;
+                                });
+                              } else {
+                                audioPlayer.resume();
+                                setState(() {
+                                  isPlaying = true;
+                                  btn = Icons.pause;
+                                });
+                              }
+                            },
+                          ),
+                          MaterialButton(
+                            child: Icon(
+                              Icons.skip_next_outlined,
+                              color: Colors.orange,
+                            ),
+                            padding: EdgeInsets.all(20),
+                            onPressed: () {
+                              if (isPlaying) {
+                                audioPlayer.pause();
+                                setState(() {
+                                  isPlaying = false;
+                                  btn = Icons.skip_next_outlined;
+                                });
+                              } else {
+                                audioPlayer.resume();
+                                setState(() {
+                                  isPlaying = true;
+                                  btn = Icons.pause;
+                                });
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ]))
               ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
+
+      // body: Column(
+      //   children: [
+      //     Expanded(
+      //       child: ListView.builder(
+      //         itemCount: songs.length,
+      //         itemBuilder: (context, index) {
+      //           var song = songs[index];
+
+      //           return ListTile(
+      //             leading: MaterialButton(
+      //               onPressed: () {},
+      //               color: Colors.blue,
+      //               textColor: Colors.white,
+      //               child: Icon(
+      //                 Icons.music_note_outlined,
+      //                 size: 24,
+      //               ),
+      //               padding: EdgeInsets.all(16),
+      //               shape: CircleBorder(),
+      //             ),
+      //             title: Text(
+      //               song.title,
+      //               style: TextStyle(color: Colors.white),
+      //             ),
+      //             onTap: () {
+      //               playMusic(song.filePath);
+      //             },
+      //             subtitle: Row(
+      //               children: [
+      //                 Text(
+      //                   song.artist,
+      //                   style: TextStyle(color: Color(0xff3c8cef)),
+      //                 ),
+      //               ],
+      //             ),
+      //           );
+      //         },
+      //       ),
+      //     ),
+      //     Container(
+      //       padding: EdgeInsets.all(10),
+      //       decoration: BoxDecoration(color: Color(0xff1c2939), boxShadow: [
+      //         BoxShadow(
+      //           color: Color(0x55212121),
+      //         )
+      //       ]),
+      //       child: Column(
+      //         children: [
+      //           Slider.adaptive(
+      //               value: position.inMicroseconds.toDouble(),
+      //               min: 0.0,
+      //               max: duration.inMicroseconds.toDouble(),
+      //               onChanged: (value) {}),
+      //           Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //             children: [
+      //               MaterialButton(
+      //                 child: Icon(
+      //                   Icons.next_plan,
+      //                   color: Colors.white,
+      //                 ),
+      //                 color: Colors.blue,
+      //                 shape: CircleBorder(),
+      //                 padding: EdgeInsets.all(20),
+      //                 onPressed: () {
+      //                   if (isPlaying) {
+      //                     audioPlayer.pause();
+      //                     setState(() {
+      //                       isPlaying = false;
+      //                       btn = Icons.play_arrow;
+      //                     });
+      //                   } else {
+      //                     audioPlayer.resume();
+      //                     setState(() {
+      //                       isPlaying = true;
+      //                       btn = Icons.pause;
+      //                     });
+      //                   }
+      //                 },
+      //               ),
+      //               MaterialButton(
+      //                 child: Icon(
+      //                   Icons.play_arrow,
+      //                   color: Colors.white,
+      //                 ),
+      //                 padding: EdgeInsets.all(20),
+      //                 onPressed: () {
+      //                   if (isPlaying) {
+      //                     audioPlayer.pause();
+      //                     setState(() {
+      //                       isPlaying = false;
+      //                       btn = Icons.play_arrow;
+      //                     });
+      //                   } else {
+      //                     audioPlayer.resume();
+      //                     setState(() {
+      //                       isPlaying = true;
+      //                       btn = Icons.pause;
+      //                     });
+      //                   }
+      //                 },
+      //               ),
+      //               MaterialButton(
+      //                 child: Icon(
+      //                   Icons.play_arrow,
+      //                   color: Colors.white,
+      //                 ),
+      //                 color: Colors.blue,
+      //                 shape: CircleBorder(),
+      //                 padding: EdgeInsets.all(20),
+      //                 onPressed: () {
+      //                   if (isPlaying) {
+      //                     audioPlayer.pause();
+      //                     setState(() {
+      //                       isPlaying = false;
+      //                       btn = Icons.play_arrow;
+      //                     });
+      //                   } else {
+      //                     audioPlayer.resume();
+      //                     setState(() {
+      //                       isPlaying = true;
+      //                       btn = Icons.pause;
+      //                     });
+      //                   }
+      //                 },
+      //               ),
+      //             ],
+      //           )
+      //         ],
+      //       ),
+      //     )
+      //   ],
+      // ),
+    );
+  }
+}
+
+class Blob extends StatelessWidget {
+final double rotation;
+final double scale;
+final double color;
+  const Blob({
+  //  
+   this.color,this.rotation,this.scale
+  }) : assert(color !=null);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Color(0xff0092ff),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(150),
+              topRight: Radius.circular(240),
+              bottomLeft: Radius.circular(220),
+              bottomRight: Radius.circular(180))),
     );
   }
 }
