@@ -1,7 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'components/custom_list.dart';
+
+import 'components/play_button.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -149,9 +150,11 @@ class _MusicAppState extends State<MusicApp> {
 
                         children: [
                           SizedBox(
-                            height: 200,
-                            width: 200,
-                            child: Blob(),
+                            height: 50,
+                            width: 50,
+                            child: PlayButton(
+                              onPressed: () {},
+                            ),
                           ),
                           MaterialButton(
                             child: Icon(
@@ -362,29 +365,6 @@ class _MusicAppState extends State<MusicApp> {
       //     )
       //   ],
       // ),
-    );
-  }
-}
-
-class Blob extends StatelessWidget {
-final double rotation;
-final double scale;
-final double color;
-  const Blob({
-  //  
-   this.color,this.rotation,this.scale
-  }) : assert(color !=null);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Color(0xff0092ff),
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(150),
-              topRight: Radius.circular(240),
-              bottomLeft: Radius.circular(220),
-              bottomRight: Radius.circular(180))),
     );
   }
 }
