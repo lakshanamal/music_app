@@ -5,6 +5,7 @@ import 'components/custom_list.dart';
 import 'components/play_button.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(MyApp());
@@ -125,38 +126,43 @@ class _MusicAppState extends State<MusicApp> {
                   ],
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: songs.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: MaterialButton(
-                          onPressed: () {},
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                          child: Icon(
-                            Icons.music_note_outlined,
-                            size: 24,
-                          ),
-                          padding: EdgeInsets.all(16),
-                          shape: CircleBorder(),
-                        ),
-                        title: Text(
-                          songs[index].title,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onTap: () {
-                          playMusic(songs[index].filePath);
-                        },
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              songs[index].artist,
-                              style: TextStyle(color: Color(0xff3c8cef)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xff121212),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: ListView.builder(
+                      itemCount: songs.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: MaterialButton(
+                            onPressed: () {},
+                            color: Color(0xff4d4d4d),
+                            textColor: Colors.white,
+                            child: Icon(
+                              Icons.music_note_outlined,
+                              size: 24,
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                            padding: EdgeInsets.all(16),
+                            shape: CircleBorder(),
+                          ),
+                          title: Text(
+                            songs[index].title,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onTap: () {
+                            playMusic(songs[index].filePath);
+                          },
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                songs[index].artist,
+                                style: TextStyle(color: Color(0xff3c8cef)),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 //   decoration: BoxDecoration(
@@ -259,8 +265,6 @@ class _MusicAppState extends State<MusicApp> {
           ),
         ),
       ),
-
-     
     );
   }
 }
