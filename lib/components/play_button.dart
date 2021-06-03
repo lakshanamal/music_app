@@ -9,7 +9,7 @@ class PlayButton extends StatefulWidget {
 
   PlayButton({
     @required this.onPressed,
-    this.initialIsPlaying = false,
+    this.initialIsPlaying,
     this.playIcon = const Icon(
       Icons.pause,
       color: Colors.white,
