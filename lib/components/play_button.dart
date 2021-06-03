@@ -11,10 +11,10 @@ class PlayButton extends StatefulWidget {
     @required this.onPressed,
     this.initialIsPlaying = false,
     this.playIcon = const Icon(
-      Icons.play_arrow,
+      Icons.pause,
       color: Colors.white,
     ),
-    this.pauseIcon = const Icon(Icons.pause, color: Colors.white),
+    this.pauseIcon = const Icon(Icons.play_arrow, color: Colors.white),
   }) : assert(onPressed != null);
 
   @override
@@ -69,7 +69,7 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
     return SizedBox.expand(
       key: ValueKey<bool>(isPlaying),
       child: IconButton(
-        icon: isPlaying ? widget.pauseIcon : widget.playIcon,
+        icon: isPlaying ? widget.playIcon : widget.pauseIcon,
         onPressed: _onToggle,
       ),
     );
