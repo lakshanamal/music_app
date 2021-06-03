@@ -1,7 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'components/custom_list.dart';
 import 'components/play_button.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,6 +29,10 @@ class MusicApp extends StatefulWidget {
 class _MusicAppState extends State<MusicApp> {
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
   List<SongInfo> songs = [];
+
+  String currentTitle = "";
+  String currentSinger = "";
+  String currentImage = "";
 
   Future<void> getSongs() async {
     songs = await audioQuery.getSongs();
@@ -98,9 +101,12 @@ class _MusicAppState extends State<MusicApp> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Musify",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: Text(
+                        "Musify",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
                     ),
                     Row(
                       children: [
@@ -126,52 +132,88 @@ class _MusicAppState extends State<MusicApp> {
                   ],
                 ),
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xff121212),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: ListView.builder(
-                      itemCount: songs.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: MaterialButton(
-                            onPressed: () {},
-                            color: Color(0xff4d4d4d),
-                            textColor: Colors.white,
-                            child: Icon(
-                              Icons.music_note_outlined,
-                              size: 24,
-                            ),
-                            padding: EdgeInsets.all(16),
-                            shape: CircleBorder(),
-                          ),
-                          title: Text(
-                            songs[index].title,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onTap: () {
-                            playMusic(songs[index].filePath);
-                          },
-                          subtitle: Row(
-                            children: [
-                              Text(
-                                songs[index].artist,
-                                style: TextStyle(color: Color(0xff3c8cef)),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                //   decoration: BoxDecoration(
-                //       color: Color(0xff242424),
-                //       borderRadius: BorderRadius.only(
-                //         topLeft: Radius.circular(30.0),
-                //         topRight: Radius.circular(30.0),
-                //       )),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xff121212),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: ListView.builder(
+                            itemCount: songs.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: MaterialButton(
+                                  onPressed: () {},
+                                  color: Color(0xff4d4d4d),
+                                  textColor: Colors.orange,
+                                  child: Icon(
+                                    Icons.music_note_outlined,
+                                    size: 24,
+                                  ),
+                                  padding: EdgeInsets.all(16),
+                                  shape: CircleBorder(),
+                                ),
+                                title: Text(
+                                  songs[index].title,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  playMusic(songs[index].filePath);
+                                },
+                                subtitle: Row(
+                                  children: [
+                                    Text(
+                                      songs[index].artist,
+                                      style: TextStyle(color: Colors.orange),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }))),
+
+                //     itemBuilder: (context, index) => customListTile(
+                //       onTap: () {
+                //         currentTitle = songs[index].title;
+                //         currentImage = songs[index].albumArtwork;
+                //         currentSinger = songs[index].artist;
+                //       },
+                //       title: songs[index].title,
+                //       singer: songs[index].artist,
+                //       cover: songs[index].albumArtwork,
+                //     ),
+                //   ),
                 // )),
+                // return ListTile(
+                //   leading: MaterialButton(
+                //     onPressed: () {},
+                //     color: Color(0xff4d4d4d),
+                //     textColor: Colors.orange,
+                //     child: Icon(
+                //       Icons.music_note_outlined,
+                //       size: 24,
+                //     ),
+                //     padding: EdgeInsets.all(16),
+                //     shape: CircleBorder(),
+                //   ),
+                //   title: Text(
+                //     songs[index].title,
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   onTap: () {
+                //     playMusic(songs[index].filePath);
+                //   },
+                //   subtitle: Row(
+                //     children: [
+                //       Text(
+                //         songs[index].artist,
+                //         style: TextStyle(color: Colors.orange),
+                //       ),
+                //     ],
+                //   ),
+                // );
+                //       },
+                //     ),
+                //   ),
+                // ),
                 Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -187,9 +229,40 @@ class _MusicAppState extends State<MusicApp> {
                       //     max: duration.inMicroseconds.toDouble(),
                       //     onChanged: (value) {}),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
                         children: [
+                          SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.orange),
+                                padding: EdgeInsets.all(5),
+                                child: Icon(
+                                  Icons.music_note,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                currentSinger,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Text(currentSinger,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16.0))
+                            ],
+                          ),
                           MaterialButton(
                             child: Icon(
                               Icons.skip_previous_outlined,
