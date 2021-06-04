@@ -3,11 +3,13 @@ import 'dart:math' show pi;
 
 class PlayButton extends StatefulWidget {
   final Icon playIcon;
+  final initialIsPlaying;
   final VoidCallback onPressed;
 
   PlayButton({
     @required this.onPressed,
     this.playIcon,
+    this.initialIsPlaying,
   }) : assert(onPressed != null);
 
   @override
@@ -29,8 +31,10 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
   void _updateRotation() => _rotation = _rotationController.value * 2 * pi;
   void _updateScale() => _scale = (_scaleController.value * 0.2) + 0.85;
 
+  bool isPlay = true;
   @override
   void initState() {
+    isPlay = widget.initialIsPlaying;
     _rotationController =
         AnimationController(vsync: this, duration: _kRotationDuration)
           ..addListener(() => setState(_updateRotation))
@@ -44,19 +48,18 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
   }
 
   void _onToggle() {
+    // if (isPlay) {
     if (_scaleController.isCompleted) {
       _scaleController.reverse();
     } else {
       _scaleController.forward();
     }
-
+    // }
     widget.onPressed();
   }
 
   Widget _buildIcon() {
     return SizedBox.expand(
-      // key: ValueKey<bool>(isPlaying),
-      
       child: IconButton(
         icon: widget.playIcon,
         padding: EdgeInsets.all(10),

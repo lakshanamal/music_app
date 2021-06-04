@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange,
+      backgroundColor: Color(0xffff6f00),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +149,7 @@ class _MusicAppState extends State<MusicApp> {
       body: Container(
         width: double.infinity,
         child: Padding(
-          padding: EdgeInsets.only(top: 48.0),
+          padding: EdgeInsets.only(top: 40.0),
           child: Container(
             child: Column(
               children: [
@@ -156,7 +157,7 @@ class _MusicAppState extends State<MusicApp> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(18.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Text(
                         "Musify",
                         style: TextStyle(color: Colors.white, fontSize: 24),
@@ -185,6 +186,42 @@ class _MusicAppState extends State<MusicApp> {
                     )
                   ],
                 ),
+                Container(
+                  height: 40,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        child: Text(
+                          "Songs",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        child: Text(
+                          "PlayList",
+                          style: TextStyle(color: Colors.orange, fontSize: 24),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                        child: Text(
+                          "Hello",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                     child: Container(
                         decoration: BoxDecoration(
@@ -194,41 +231,49 @@ class _MusicAppState extends State<MusicApp> {
                         child: ListView.builder(
                             itemCount: songs.length,
                             itemBuilder: (context, index) {
-                              return ListTile(
-                                leading: MaterialButton(
-                                  onPressed: () {},
-                                  color: Color(0xff4d4d4d),
-                                  textColor: Colors.orange,
-                                  child: Icon(
-                                    Icons.music_note_outlined,
-                                    size: 22,
-                                  ),
-                                  padding: EdgeInsets.all(15),
-                                  shape: CircleBorder(),
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 5),
+                                decoration: BoxDecoration(
+                                  color: Color(0xff212121),
                                 ),
-                                title: Text(
-                                  songs[index].title,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 13),
-                                ),
-                                onTap: () {
-                                  currentTitle = songs[index].title;
-                                  currentSinger = songs[index].artist;
-                                  currentPath = songs[index].filePath;
-                                  currentImage = "";
-                                  playMusic(currentPath);
-                                  setState(() {
-                                    isPlaying = true;
-                                  });
-                                },
-                                subtitle: Row(
-                                  children: [
-                                    Text(
-                                      songs[index].artist,
-                                      style:
-                                          TextStyle(color: Colors.orange[300]),
+                                child: ListTile(
+                                  leading: MaterialButton(
+                                    onPressed: () {},
+                                    color: Color(0xff4d4d4d),
+                                    textColor: Colors.orange,
+                                    child: Icon(
+                                      Icons.music_note_outlined,
+                                      size: 22,
                                     ),
-                                  ],
+                                    padding: EdgeInsets.all(20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    songs[index].title,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 13),
+                                  ),
+                                  onTap: () {
+                                    currentTitle = songs[index].title;
+                                    currentSinger = songs[index].artist;
+                                    currentPath = songs[index].filePath;
+                                    currentImage = "";
+                                    playMusic(currentPath);
+                                    setState(() {
+                                      isPlaying = true;
+                                    });
+                                  },
+                                  subtitle: Row(
+                                    children: [
+                                      Text(
+                                        songs[index].artist,
+                                        style: TextStyle(
+                                            color: Colors.orange[300]),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }))),
@@ -308,7 +353,7 @@ class _MusicAppState extends State<MusicApp> {
                             width: 40,
                             child: MaterialButton(
                               child: Icon(
-                                Icons.skip_previous_outlined,
+                                Icons.skip_previous_sharp,
                                 color: Colors.orange,
                               ),
                               onPressed: () {},
@@ -321,6 +366,7 @@ class _MusicAppState extends State<MusicApp> {
                               height: 50,
                               width: 50,
                               child: PlayButton(
+                                initialIsPlaying: isPlaying,
                                 onPressed: () {
                                   {
                                     if (currentSong == "") {
@@ -351,7 +397,7 @@ class _MusicAppState extends State<MusicApp> {
                             width: 40,
                             child: MaterialButton(
                               child: Icon(
-                                Icons.skip_next_outlined,
+                                Icons.skip_next_sharp,
                                 color: Colors.orange,
                               ),
                               // padding: EdgeInsets.all(20),
