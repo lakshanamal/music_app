@@ -156,7 +156,7 @@ class _MusicAppState extends State<MusicApp> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(13.0),
+                      padding: const EdgeInsets.all(18.0),
                       child: Text(
                         "Musify",
                         style: TextStyle(color: Colors.white, fontSize: 24),
@@ -201,14 +201,15 @@ class _MusicAppState extends State<MusicApp> {
                                   textColor: Colors.orange,
                                   child: Icon(
                                     Icons.music_note_outlined,
-                                    size: 24,
+                                    size: 22,
                                   ),
-                                  padding: EdgeInsets.all(16),
+                                  padding: EdgeInsets.all(15),
                                   shape: CircleBorder(),
                                 ),
                                 title: Text(
                                   songs[index].title,
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
                                 ),
                                 onTap: () {
                                   currentTitle = songs[index].title;
@@ -224,12 +225,15 @@ class _MusicAppState extends State<MusicApp> {
                                   children: [
                                     Text(
                                       songs[index].artist,
-                                      style: TextStyle(color: Colors.orange),
+                                      style:
+                                          TextStyle(color: Colors.orange[300]),
                                     ),
                                   ],
                                 ),
                               );
                             }))),
+
+                // last row  /////////////
                 Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -264,79 +268,113 @@ class _MusicAppState extends State<MusicApp> {
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                currentTitle,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w600),
+                            children: <Widget>[
+                              Container(
+                                width: 200,
+                                child: Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: RichText(
+                                        overflow: TextOverflow.ellipsis,
+                                        strutStyle: StrutStyle(fontSize: 12.0),
+                                        text: TextSpan(
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            text: currentTitle),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                //   Text(currentSinger,
+                                //       style: TextStyle(
+                                //           color: Colors.grey, fontSize: 12.0))
+                                // ,
                               ),
-                              SizedBox(
-                                height: 5.0,
-                              ),
-                              Text(currentSinger,
+                              Container(
+                                width: 200,
+                                child: Text(
+                                  currentSinger,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 14.0))
+                                    color: Colors.grey,
+                                    fontSize: 10.0,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                          MaterialButton(
-                            child: Icon(
-                              Icons.skip_previous_outlined,
-                              color: Colors.orange,
-                            ),
-                            padding: EdgeInsets.all(20),
-                            onPressed: () {},
-                          ),
                           SizedBox(
+                            height: 20,
+                            width: 40,
+                            child: MaterialButton(
+                              child: Icon(
+                                Icons.skip_previous_outlined,
+                                color: Colors.orange,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            alignment: Alignment.center,
+                            child: SizedBox(
                               height: 50,
                               width: 50,
-                              child: MaterialButton(
-                                child: Icon(
-                                  btn,
-                                  color: Colors.white,
-                                ),
+                              child: PlayButton(
                                 onPressed: () {
-                                  if (currentSong == "") {
-                                    playMusic(currentPath);
-                                  } else {
-                                    if (isPlaying) {
-                                      audioPlayer.pause();
-                                      setState(() {
-                                        isPlaying = false;
-                                        btn = Icons.play_arrow;
-                                      });
+                                  {
+                                    if (currentSong == "") {
+                                      playMusic(currentPath);
                                     } else {
-                                      audioPlayer.resume();
-                                      setState(() {
-                                        isPlaying = true;
-                                        btn = Icons.pause;
-                                      });
+                                      if (isPlaying) {
+                                        audioPlayer.pause();
+                                        setState(() {
+                                          isPlaying = false;
+                                          btn = Icons.play_arrow;
+                                        });
+                                      } else {
+                                        audioPlayer.resume();
+                                        setState(() {
+                                          isPlaying = true;
+                                          btn = Icons.pause;
+                                        });
+                                      }
                                     }
                                   }
                                 },
-                              )),
-                          MaterialButton(
-                            child: Icon(
-                              Icons.skip_next_outlined,
-                              color: Colors.orange,
+                                playIcon: Icon(btn),
+                              ),
                             ),
-                            padding: EdgeInsets.all(20),
-                            onPressed: () {
-                              if (isPlaying) {
-                                audioPlayer.pause();
-                                setState(() {
-                                  isPlaying = false;
-                                  btn = Icons.skip_next_outlined;
-                                });
-                              } else {
-                                audioPlayer.resume();
-                                setState(() {
-                                  isPlaying = true;
-                                  btn = Icons.pause;
-                                });
-                              }
-                            },
+                          ),
+                          SizedBox(
+                            height: 20,
+                            width: 40,
+                            child: MaterialButton(
+                              child: Icon(
+                                Icons.skip_next_outlined,
+                                color: Colors.orange,
+                              ),
+                              // padding: EdgeInsets.all(20),
+                              onPressed: () {
+                                if (currentSong == "") {
+                                  playMusic(currentPath);
+                                } else {
+                                  if (isPlaying) {
+                                    audioPlayer.pause();
+                                    setState(() {
+                                      isPlaying = false;
+                                      btn = Icons.play_arrow;
+                                    });
+                                  } else {
+                                    audioPlayer.resume();
+                                    setState(() {
+                                      isPlaying = true;
+                                      btn = Icons.pause;
+                                    });
+                                  }
+                                }
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -349,7 +387,6 @@ class _MusicAppState extends State<MusicApp> {
     );
   }
 }
-
 
 // PlayButton(
 //                               onPressed: () {
@@ -376,3 +413,29 @@ class _MusicAppState extends State<MusicApp> {
 //                               initialIsPlaying: isPlaying,
 //                               playIcon: Icon(btn),
 //                             ),
+
+// MaterialButton(
+//                                 child: Icon(
+//                                   btn,
+//                                   color: Colors.white,
+//                                 ),
+//                                 onPressed: () {
+//                                   if (currentSong == "") {
+//                                     playMusic(currentPath);
+//                                   } else {
+//                                     if (isPlaying) {
+//                                       audioPlayer.pause();
+//                                       setState(() {
+//                                         isPlaying = false;
+//                                         btn = Icons.play_arrow;
+//                                       });
+//                                     } else {
+//                                       audioPlayer.resume();
+//                                       setState(() {
+//                                         isPlaying = true;
+//                                         btn = Icons.pause;
+//                                       });
+//                                     }
+//                                   }
+//                                 },
+//                               )

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 class PlayButton extends StatefulWidget {
-  final bool initialIsPlaying;
   final Icon playIcon;
   final VoidCallback onPressed;
 
   PlayButton({
     @required this.onPressed,
-    this.initialIsPlaying,
     this.playIcon,
   }) : assert(onPressed != null);
 
@@ -53,14 +51,16 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
     }
 
     widget.onPressed();
-    
   }
 
   Widget _buildIcon() {
     return SizedBox.expand(
       // key: ValueKey<bool>(isPlaying),
+      
       child: IconButton(
         icon: widget.playIcon,
+        padding: EdgeInsets.all(10),
+        color: Colors.white,
         onPressed: _onToggle,
       ),
     );
