@@ -4,17 +4,12 @@ import 'dart:math' show pi;
 class PlayButton extends StatefulWidget {
   final bool initialIsPlaying;
   final Icon playIcon;
-  final Icon pauseIcon;
   final VoidCallback onPressed;
 
   PlayButton({
     @required this.onPressed,
     this.initialIsPlaying,
-    this.playIcon = const Icon(
-      Icons.pause,
-      color: Colors.white,
-    ),
-    this.pauseIcon = const Icon(Icons.play_arrow, color: Colors.white),
+    this.playIcon,
   }) : assert(onPressed != null);
 
   @override
@@ -24,8 +19,6 @@ class PlayButton extends StatefulWidget {
 class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
   static const _kToggleDuration = Duration(milliseconds: 300);
   static const _kRotationDuration = Duration(seconds: 5);
-
-  bool isPlaying;
 
   // rotation and scale animations
   AnimationController _rotationController;
@@ -40,7 +33,6 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    isPlaying = widget.initialIsPlaying;
     _rotationController =
         AnimationController(vsync: this, duration: _kRotationDuration)
           ..addListener(() => setState(_updateRotation))
@@ -54,8 +46,6 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
   }
 
   void _onToggle() {
-    setState(() => isPlaying = !isPlaying);
-
     if (_scaleController.isCompleted) {
       _scaleController.reverse();
     } else {
@@ -63,13 +53,14 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
     }
 
     widget.onPressed();
+    
   }
 
-  Widget _buildIcon(bool isPlaying) {
+  Widget _buildIcon() {
     return SizedBox.expand(
-      key: ValueKey<bool>(isPlaying),
+      // key: ValueKey<bool>(isPlaying),
       child: IconButton(
-        icon: isPlaying ? widget.playIcon : widget.pauseIcon,
+        icon: widget.playIcon,
         onPressed: _onToggle,
       ),
     );
@@ -100,7 +91,7 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
           Container(
             constraints: BoxConstraints.expand(),
             child: AnimatedSwitcher(
-              child: _buildIcon(isPlaying),
+              child: _buildIcon(),
               duration: _kToggleDuration,
             ),
             decoration: BoxDecoration(
