@@ -75,12 +75,18 @@ class _MusicAppState extends State<MusicApp> {
   String currentTitle = "";
   String currentSinger = "";
   String currentImage = "";
+  String currentPath = "";
+
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
   List<SongInfo> songs = [];
   void getSongs() async {
     songs = await audioQuery.getSongs();
+
     setState(() {
       songs = songs;
+      currentTitle = songs[0].title;
+      currentSinger = songs[0].artist;
+      currentPath = songs[0].filePath;
     });
   }
 
@@ -93,7 +99,8 @@ class _MusicAppState extends State<MusicApp> {
   IconData btn = Icons.play_arrow;
 
   AudioPlayer audioPlayer = new AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
-  // AudioCache audioCache=getSongs();
+  AudioCache audioCache = AudioCache();
+
   bool isPlaying = false;
   String currentSong = "";
 
@@ -102,21 +109,23 @@ class _MusicAppState extends State<MusicApp> {
 
   void playMusic(String url) async {
     if (isPlaying && currentSong != url) {
-      audioPlayer.pause();
-      int result = await audioPlayer.play(url);
+      audioPlayer.pause(); // anith ewa close karanawa
+      int result = await audioPlayer.play(url, isLocal: true);
 
       if (result == 1) {
         setState(() {
           currentSong = url;
+          isPlaying = true;
+          btn = Icons.pause;
         });
       }
     } else if (!isPlaying) {
-      int result = await audioPlayer.play(url);
+      int result = await audioPlayer.play(url, isLocal: true);
 
       if (result == 1) {
         setState(() {
           isPlaying = true;
-          btn = Icons.play_arrow;
+          btn = Icons.pause;
         });
       }
     }
@@ -202,10 +211,14 @@ class _MusicAppState extends State<MusicApp> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 onTap: () {
-                                  playMusic(songs[index].filePath);
                                   currentTitle = songs[index].title;
                                   currentSinger = songs[index].artist;
+                                  currentPath = songs[index].filePath;
                                   currentImage = "";
+                                  playMusic(currentPath);
+                                  setState(() {
+                                    isPlaying = true;
+                                  });
                                 },
                                 subtitle: Row(
                                   children: [
@@ -231,6 +244,7 @@ class _MusicAppState extends State<MusicApp> {
                       //     min: 0.0,
                       //     max: duration.inMicroseconds.toDouble(),
                       //     onChanged: (value) {}),
+
                       Row(
                         children: [
                           SizedBox(
@@ -252,7 +266,7 @@ class _MusicAppState extends State<MusicApp> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                currentSinger,
+                                currentTitle,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.0,
@@ -263,7 +277,7 @@ class _MusicAppState extends State<MusicApp> {
                               ),
                               Text(currentSinger,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 16.0))
+                                      color: Colors.grey, fontSize: 14.0))
                             ],
                           ),
                           MaterialButton(
@@ -272,46 +286,36 @@ class _MusicAppState extends State<MusicApp> {
                               color: Colors.orange,
                             ),
                             padding: EdgeInsets.all(20),
-                            onPressed: () {
-                              if (isPlaying) {
-                                audioPlayer.pause();
-                                setState(() {
-                                  isPlaying = false;
-                                  btn = Icons.skip_previous_outlined;
-                                });
-                              } else {
-                                audioPlayer.resume();
-                                setState(() {
-                                  isPlaying = true;
-                                  btn = Icons.pause;
-                                });
-                              }
-                            },
+                            onPressed: () {},
                           ),
                           SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: PlayButton(
-                              onPressed: () {
-                                {
-                                  if (isPlaying) {
-                                    audioPlayer.pause();
-                                    setState(() {
-                                      isPlaying = false;
-                                      btn = Icons.skip_previous_outlined;
-                                    });
+                              height: 50,
+                              width: 50,
+                              child: MaterialButton(
+                                child: Icon(
+                                  btn,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  if (currentSong == "") {
+                                    playMusic(currentPath);
                                   } else {
-                                    audioPlayer.resume();
-                                    setState(() {
-                                      isPlaying = true;
-                                      btn = Icons.pause;
-                                    });
+                                    if (isPlaying) {
+                                      audioPlayer.pause();
+                                      setState(() {
+                                        isPlaying = false;
+                                        btn = Icons.play_arrow;
+                                      });
+                                    } else {
+                                      audioPlayer.resume();
+                                      setState(() {
+                                        isPlaying = true;
+                                        btn = Icons.pause;
+                                      });
+                                    }
                                   }
-                                }
-                              },
-                              initialIsPlaying: isPlaying,
-                            ),
-                          ),
+                                },
+                              )),
                           MaterialButton(
                             child: Icon(
                               Icons.skip_next_outlined,
@@ -345,3 +349,30 @@ class _MusicAppState extends State<MusicApp> {
     );
   }
 }
+
+
+// PlayButton(
+//                               onPressed: () {
+//                                 {
+//                                   if (currentSong == "") {
+//                                     playMusic(currentPath);
+//                                   } else {
+//                                     if (isPlaying) {
+//                                       audioPlayer.pause();
+//                                       setState(() {
+//                                         isPlaying = false;
+//                                         btn = Icons.play_arrow;
+//                                       });
+//                                     } else {
+//                                       audioPlayer.resume();
+//                                       setState(() {
+//                                         isPlaying = true;
+//                                         btn = Icons.pause;
+//                                       });
+//                                     }
+//                                   }
+//                                 }
+//                               },
+//                               initialIsPlaying: isPlaying,
+//                               playIcon: Icon(btn),
+//                             ),
