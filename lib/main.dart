@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,14 +80,16 @@ class _MusicAppState extends State<MusicApp> {
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
   List<SongInfo> songs = [];
   void getSongs() async {
-    songs = await audioQuery.getSongs();
+    if (await Permission.storage.request().isGranted) {
+      songs = await audioQuery.getSongs();
 
-    setState(() {
-      songs = songs;
-      currentTitle = songs[0].title;
-      currentSinger = songs[0].artist;
-      currentPath = songs[0].filePath;
-    });
+      setState(() {
+        songs = songs;
+        currentTitle = songs[0].title;
+        currentSinger = songs[0].artist;
+        currentPath = songs[0].filePath;
+      });
+    }
   }
 
   @override
@@ -311,46 +312,51 @@ class _MusicAppState extends State<MusicApp> {
                               ),
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                width: 200,
-                                child: Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        strutStyle: StrutStyle(fontSize: 12.0),
-                                        text: TextSpan(
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                            text: currentTitle),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 10.0, right: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  width: 180,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: RichText(
+                                          overflow: TextOverflow.ellipsis,
+                                          strutStyle:
+                                              StrutStyle(fontSize: 12.0),
+                                          text: TextSpan(
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              text: currentTitle),
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
 
-                                //   Text(currentSinger,
-                                //       style: TextStyle(
-                                //           color: Colors.grey, fontSize: 12.0))
-                                // ,
-                              ),
-                              Container(
-                                width: 200,
-                                child: Text(
-                                  currentSinger,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 10.0,
+                                  //   Text(currentSinger,
+                                  //       style: TextStyle(
+                                  //           color: Colors.grey, fontSize: 12.0))
+                                  // ,
+                                ),
+                                Container(
+                                  width: 180,
+                                  child: Text(
+                                    currentSinger,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 10.0,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 20,
-                            width: 40,
+                            width: 41,
                             child: MaterialButton(
                               child: Icon(
                                 Icons.skip_previous_sharp,
@@ -359,7 +365,19 @@ class _MusicAppState extends State<MusicApp> {
                               onPressed: () {},
                             ),
                           ),
+                          SizedBox(
+                            height: 20,
+                            width: 40,
+                            child: MaterialButton(
+                              child: Icon(
+                                Icons.skip_next_rounded,
+                                color: Colors.orange,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
                           Container(
+                            margin: EdgeInsets.only(left: 10),
                             width: 50,
                             alignment: Alignment.center,
                             child: SizedBox(
@@ -390,36 +408,6 @@ class _MusicAppState extends State<MusicApp> {
                                 },
                                 playIcon: Icon(btn),
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                            width: 40,
-                            child: MaterialButton(
-                              child: Icon(
-                                Icons.skip_next_sharp,
-                                color: Colors.orange,
-                              ),
-                              // padding: EdgeInsets.all(20),
-                              onPressed: () {
-                                if (currentSong == "") {
-                                  playMusic(currentPath);
-                                } else {
-                                  if (isPlaying) {
-                                    audioPlayer.pause();
-                                    setState(() {
-                                      isPlaying = false;
-                                      btn = Icons.play_arrow;
-                                    });
-                                  } else {
-                                    audioPlayer.resume();
-                                    setState(() {
-                                      isPlaying = true;
-                                      btn = Icons.pause;
-                                    });
-                                  }
-                                }
-                              },
                             ),
                           ),
                         ],

@@ -59,10 +59,9 @@ class _PlayButtonState extends State<PlayButton> with TickerProviderStateMixin {
   }
 
   Widget _buildIcon() {
-    return SizedBox.expand(
+    return SizedBox(
       child: IconButton(
         icon: widget.playIcon,
-        padding: EdgeInsets.all(10),
         color: Colors.white,
         onPressed: _onToggle,
       ),
