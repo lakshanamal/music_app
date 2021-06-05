@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'components/play_button.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(brightness: Brightness.light),
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
@@ -145,6 +144,9 @@ class _MusicAppState extends State<MusicApp> {
 
   @override
   Widget build(BuildContext context) {
+    final text = MediaQuery.of(context).platformBrightness == Brightness.dark
+        ? 'DarkTheme'
+        : 'LightTheme';
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
@@ -216,7 +218,7 @@ class _MusicAppState extends State<MusicApp> {
                         padding:
                             const EdgeInsets.only(bottom: 8, left: 8, right: 8),
                         child: Text(
-                          "Hello",
+                          "Albums",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -421,55 +423,3 @@ class _MusicAppState extends State<MusicApp> {
     );
   }
 }
-
-// PlayButton(
-//                               onPressed: () {
-//                                 {
-//                                   if (currentSong == "") {
-//                                     playMusic(currentPath);
-//                                   } else {
-//                                     if (isPlaying) {
-//                                       audioPlayer.pause();
-//                                       setState(() {
-//                                         isPlaying = false;
-//                                         btn = Icons.play_arrow;
-//                                       });
-//                                     } else {
-//                                       audioPlayer.resume();
-//                                       setState(() {
-//                                         isPlaying = true;
-//                                         btn = Icons.pause;
-//                                       });
-//                                     }
-//                                   }
-//                                 }
-//                               },
-//                               initialIsPlaying: isPlaying,
-//                               playIcon: Icon(btn),
-//                             ),
-
-// MaterialButton(
-//                                 child: Icon(
-//                                   btn,
-//                                   color: Colors.white,
-//                                 ),
-//                                 onPressed: () {
-//                                   if (currentSong == "") {
-//                                     playMusic(currentPath);
-//                                   } else {
-//                                     if (isPlaying) {
-//                                       audioPlayer.pause();
-//                                       setState(() {
-//                                         isPlaying = false;
-//                                         btn = Icons.play_arrow;
-//                                       });
-//                                     } else {
-//                                       audioPlayer.resume();
-//                                       setState(() {
-//                                         isPlaying = true;
-//                                         btn = Icons.pause;
-//                                       });
-//                                     }
-//                                   }
-//                                 },
-//                               )
